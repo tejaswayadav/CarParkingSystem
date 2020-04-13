@@ -28,4 +28,3 @@ func (c Car) GetCarManufacturer() string{
 func (c Car) GetLicensePlate() string{
 	return c.licensePlate
 }
-

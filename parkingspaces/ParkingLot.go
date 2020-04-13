@@ -11,6 +11,7 @@ type ParkingLot struct {
 	capacity         int
 	spaceLeft        int
 	parkingAllotment map[string]vehicles.Car
+	licensePlateList []string
 }
 
 func GetParkingLot(name string, capacity int) ParkingLot {
@@ -19,6 +20,7 @@ func GetParkingLot(name string, capacity int) ParkingLot {
 	parkinglot.capacity = capacity
 	parkinglot.spaceLeft = capacity
 	parkinglot.parkingAllotment = parkingAllotmentCreator(capacity)
+	parkinglot.licensePlateList = []string{}
 	return parkinglot
 }
 
@@ -35,10 +37,18 @@ func (p *ParkingLot) AddCar(c vehicles.Car) {
 	if p.spaceLeft <= 0 {
 		fmt.Println("Parking Space is currently not available in this Parking Lot.")
 	} else {
+		for _, val := range p.licensePlateList {
+			if val == c.GetLicensePlate(){
+				fmt.Println("Vehicle already present in the parking lot.")
+			} else {
+				fmt.Println(val)
+			}
+		}
 		for k, v := range p.parkingAllotment {
 			if v.GetCarName() == "" {
 				p.spaceLeft = p.spaceLeft - 1
 				p.parkingAllotment[k] = c
+				p.licensePlateList = append(p.licensePlateList, c.GetLicensePlate())
 				fmt.Printf("Car %s %s with plates %s is parked at %s in %s\n", c.GetCarManufacturer(), c.GetCarName(), c.GetLicensePlate(), k, p.name)
 				fmt.Println("Space left is: ", p.spaceLeft)
 				break
@@ -46,3 +56,4 @@ func (p *ParkingLot) AddCar(c vehicles.Car) {
 		}
 	}
 }
+
