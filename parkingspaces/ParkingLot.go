@@ -33,18 +33,27 @@ func parkingAllotmentCreator(capacity int) map[string]vehicles.Car {
 	return allotment
 }
 
+func (p *ParkingLot) GetParkingLotDetails() {
+	fmt.Println("Name                      :", p.name)
+	fmt.Println("Capacity                  :", p.capacity)
+	fmt.Println("SpaceLeft                 :", p.spaceLeft)
+	fmt.Println("ParkingAllotment          :", p.parkingAllotment)
+	fmt.Println("Vehicle LicensePlate List :", p.licensePlateList)
+}
+
 func (p *ParkingLot) AddCar(c vehicles.Car) {
 	if p.spaceLeft <= 0 {
 		fmt.Println("Parking Space is currently not available in this Parking Lot.")
 	} else {
-		for _, val := range p.licensePlateList {
-			if val == c.GetLicensePlate(){
-				fmt.Println("Vehicle already present in the parking lot.")
-			} else {
-				fmt.Println(val)
-			}
-		}
 		for k, v := range p.parkingAllotment {
+			for _, val := range p.licensePlateList {
+				if val == c.GetLicensePlate(){
+					fmt.Println("Vehicle already present in the parking lot.")
+					return
+				} else {
+					continue
+				}
+			}
 			if v.GetCarName() == "" {
 				p.spaceLeft = p.spaceLeft - 1
 				p.parkingAllotment[k] = c
@@ -54,6 +63,25 @@ func (p *ParkingLot) AddCar(c vehicles.Car) {
 				break
 			}
 		}
+	}
+}
+
+func (p *ParkingLot) RemoveCar(c vehicles.Car) {
+	if len(p.licensePlateList) == 0 {
+		fmt.Println("This Parking Lot is empty.")
+		return
+	} else {
+		for _, val := range p.licensePlateList {
+			if val == c.GetLicensePlate() {
+				for k, _ := range p.parkingAllotment {
+					delete(p.parkingAllotment, k)
+					p.spaceLeft = p.spaceLeft + 1
+					fmt.Printf("Car %s %s with plates %s has left %s\n", c.GetCarManufacturer(), c.GetCarName(), c.GetLicensePlate(), p.name)
+					return
+				}
+			}
+		}
+		fmt.Printf("Car %s %s with plates %s is not parked at %s\n", c.GetCarManufacturer(), c.GetCarName(), c.GetLicensePlate(), p.name)
 	}
 }
 
