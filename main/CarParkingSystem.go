@@ -9,6 +9,7 @@ import (
 func main() {
 	p := parkingspaces.GetParkingLot("TCS", 3)
 	fmt.Println(p)
+	// p1 := parkingspaces.GetParkingLot("Tieto", 5)
 	c1 := vehicles.GetCar("Swift", "Maruti Suzuki", "MH12BP63")
 	c2 := vehicles.GetCar("Figo", "Ford", "MH04BS85")
 	c3 := vehicles.GetCar("DZire", "Maruti Suzuki", "MH04BD12")
@@ -19,6 +20,7 @@ func main() {
 	p.AddCar(c3)
 	p.AddCar(c4)
 	p.RemoveCar(c5)
+	p.GetParkingSpotDetails("P1")
 }
 
 
