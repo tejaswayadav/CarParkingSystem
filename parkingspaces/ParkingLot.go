@@ -11,7 +11,7 @@ type ParkingLot struct {
 	capacity         int
 	spaceLeft        int
 	parkingAllotment map[string]vehicles.Car
-	licensePlateList []string
+	parkedVehiclesLicensePlateList []string
 }
 
 func parkingAllotmentCreator(capacity int) map[string]vehicles.Car {
@@ -29,16 +29,16 @@ func GetParkingLot(name string, capacity int) ParkingLot {
 	parkinglot.capacity = capacity
 	parkinglot.spaceLeft = capacity
 	parkinglot.parkingAllotment = parkingAllotmentCreator(capacity)
-	parkinglot.licensePlateList = []string{}
+	parkinglot.parkedVehiclesLicensePlateList = []string{}
 	return parkinglot
 }
 
 func (p *ParkingLot) GetParkingLotDetails() {
 	fmt.Println("Name                      :", p.name)
 	fmt.Println("Capacity                  :", p.capacity)
-	fmt.Println("SpaceLeft                 :", p.spaceLeft)
+	fmt.Println("Current Space Left        :", p.spaceLeft)
 	fmt.Println("ParkingAllotment          :", p.parkingAllotment)
-	fmt.Println("Vehicle LicensePlate List :", p.licensePlateList)
+	fmt.Println("Vehicle LicensePlate List :", p.parkedVehiclesLicensePlateList)
 }
 
 func (p *ParkingLot) GetParkingSpotDetails(parkingSpot string) {
@@ -55,7 +55,7 @@ func (p *ParkingLot) AddCar(c vehicles.Car) {
 		return
 	} else {
 		for k, v := range p.parkingAllotment {
-			for _, val := range p.licensePlateList {
+			for _, val := range p.parkedVehiclesLicensePlateList {
 				if val == c.GetLicensePlate(){
 					fmt.Println("Vehicle already present in the parking lot.")
 					return
@@ -66,7 +66,7 @@ func (p *ParkingLot) AddCar(c vehicles.Car) {
 			if v.GetCarName() == "" {
 				p.spaceLeft = p.spaceLeft - 1
 				p.parkingAllotment[k] = c
-				p.licensePlateList = append(p.licensePlateList, c.GetLicensePlate())
+				p.parkedVehiclesLicensePlateList = append(p.parkedVehiclesLicensePlateList, c.GetLicensePlate())
 				fmt.Printf("Car %s %s with plates %s is parked at %s in %s\n", c.GetCarManufacturer(), c.GetCarName(), c.GetLicensePlate(), k, p.name)
 				fmt.Println("Space left is: ", p.spaceLeft)
 				return
@@ -76,11 +76,11 @@ func (p *ParkingLot) AddCar(c vehicles.Car) {
 }
 
 func (p *ParkingLot) RemoveCar(c vehicles.Car) {
-	if len(p.licensePlateList) == 0 {
+	if len(p.parkedVehiclesLicensePlateList) == 0 {
 		fmt.Println("This Parking Lot is empty.")
 		return
 	} else {
-		for _, val := range p.licensePlateList {
+		for _, val := range p.parkedVehiclesLicensePlateList {
 			if val == c.GetLicensePlate() {
 				for k, _ := range p.parkingAllotment {
 					delete(p.parkingAllotment, k)
