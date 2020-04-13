@@ -1,4 +1,4 @@
-package parking
+package parkingspaces
 
 import (
 	"fmt"
@@ -31,17 +31,17 @@ func parkingAllotmentCreator(capacity int) map[string]vehicles.Car {
 	return allotment
 }
 
-func (p ParkingLot) AddCar(c vehicles.Car) {
-	if p.spaceLeft > 0 {
+func (p *ParkingLot) AddCar(c vehicles.Car) {
+	if p.spaceLeft <= 0 {
+		fmt.Println("Parking Space is currently not available in this Parking Lot.")
+	} else {
 		for k, v := range p.parkingAllotment {
 			if v.GetCarName() == "" {
-				p.parkingAllotment[k] = c
 				p.spaceLeft = p.spaceLeft - 1
+				p.parkingAllotment[k] = c
 				fmt.Printf("Car %s %s with plates %s is parked at %s in %s\n", c.GetCarManufacturer(), c.GetCarName(), c.GetLicensePlate(), k, p.name)
 				fmt.Println("Space left is: ", p.spaceLeft)
 				break
-			} else {
-				fmt.Println("Parking Space is not available in this parking lot.")
 			}
 		}
 	}
