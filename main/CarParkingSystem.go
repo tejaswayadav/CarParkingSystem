@@ -6,6 +6,16 @@ import (
 	"github.com/CarParkingSystem/vehicles"
 )
 
+func CheckAvailability(p parkingspaces.ParkingLot) {
+	var emptySpotList []string
+	for k, v := range p.GetParkingAllotment(){
+		if v.GetCarName() == "" {
+			emptySpotList = append(emptySpotList, k)
+		}
+	}
+	fmt.Println("Parking Space Available at: ", emptySpotList)
+}
+
 func main() {
 	p := parkingspaces.GetParkingLot("TCS", 3)
 	fmt.Println(p)
@@ -19,8 +29,10 @@ func main() {
 	p.AddCar(c2)
 	p.AddCar(c3)
 	p.AddCar(c4)
+	p.RemoveCar(c1)
+	p.RemoveCar(c2)
 	p.RemoveCar(c5)
-	p.GetParkingSpotDetails("P1")
+	CheckAvailability(p)
 }
 
 

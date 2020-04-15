@@ -2,6 +2,7 @@ package parkingspaces
 
 import (
 	"fmt"
+	"github.com/CarParkingSystem/utils"
 	"github.com/CarParkingSystem/vehicles"
 	"strconv"
 )
@@ -11,7 +12,7 @@ type ParkingLot struct {
 	capacity         int
 	spaceLeft        int
 	parkingAllotment map[string]vehicles.Car
-	parkedVehiclesLicensePlateList []string
+	parkedVehiclesLicensePlateList utils.StringList
 }
 
 func parkingAllotmentCreator(capacity int) map[string]vehicles.Car {
@@ -21,6 +22,14 @@ func parkingAllotmentCreator(capacity int) map[string]vehicles.Car {
 		allotment["P"+strconv.Itoa(position)] = emptyCar
 	}
 	return allotment
+}
+
+func (p ParkingLot) GetParkingName() string {
+	return p.name
+}
+
+func (p *ParkingLot) GetParkingAllotment() map[string]vehicles.Car{
+	return p.parkingAllotment
 }
 
 func GetParkingLot(name string, capacity int) ParkingLot {
@@ -80,17 +89,23 @@ func (p *ParkingLot) RemoveCar(c vehicles.Car) {
 		fmt.Println("This Parking Lot is empty.")
 		return
 	} else {
-		for _, val := range p.parkedVehiclesLicensePlateList {
-			if val == c.GetLicensePlate() {
-				for k, _ := range p.parkingAllotment {
-					delete(p.parkingAllotment, k)
-					p.spaceLeft = p.spaceLeft + 1
-					fmt.Printf("Car %s %s with plates %s has left %s\n", c.GetCarManufacturer(), c.GetCarName(), c.GetLicensePlate(), p.name)
-					return
+		if p.parkedVehiclesLicensePlateList.Contains(c.GetLicensePlate()) {
+			for k, _ := range p.parkingAllotment {
+				p.parkingAllotment[k] = vehicles.Car{}
+				var indexToBeDeleted int
+				for i, v := range p.parkedVehiclesLicensePlateList{
+					if v == c.GetLicensePlate() {
+						indexToBeDeleted = i
+					}
 				}
+				p.parkedVehiclesLicensePlateList = append(p.parkedVehiclesLicensePlateList[:indexToBeDeleted], p.parkedVehiclesLicensePlateList[indexToBeDeleted+1:]...)
+				p.spaceLeft = p.spaceLeft + 1
+				fmt.Printf("Car %s %s with plates %s has left %s\n", c.GetCarManufacturer(), c.GetCarName(), c.GetLicensePlate(), p.name)
+				return
 			}
+		} else {
+			fmt.Printf("Car %s %s with plates %s is not parked at %s\n", c.GetCarManufacturer(), c.GetCarName(), c.GetLicensePlate(), p.name)
 		}
-		fmt.Printf("Car %s %s with plates %s is not parked at %s\n", c.GetCarManufacturer(), c.GetCarName(), c.GetLicensePlate(), p.name)
 	}
 }
 
